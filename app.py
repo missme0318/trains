@@ -113,11 +113,13 @@ def handle_message(event):
 
         return
 
-
     if msg in ['hi', 'Hi!']:
         r = 'Hi!'
-    elif '聊天' in msg:
-        r = '我是機器人'
+
+    elif '高雄美食' == msg:
+        name, comment, shoptype, website, address, limittime = input_wanted('高雄美食')
+        r = name
+
     else:
         r = '抱歉！您說什麼？'
 
