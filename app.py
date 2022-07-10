@@ -1,14 +1,78 @@
 from flask import Flask, request, abort
+from linebot import (LineBotApi, WebhookHandler)
+from linebot.exceptions import InvalidSignatureError
+from linebot.models import MessageEvent, TextMessage, TextSendMessage,StickerSendMessage
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.support.ui import Select
+import time
+import os
 
-from linebot import (
-    LineBotApi, WebhookHandler
-)
-from linebot.exceptions import (
-    InvalidSignatureError
-)
-from linebot.models import (
-    MessageEvent, TextMessage, TextSendMessage,StickerSendMessage
-)
+
+def web_get_address(web):
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+    chrome_options.add_argument("--headless") #無頭模式
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--no-sandbox")
+    driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
+
+    #driver = webdriver.Chrome(executable_path='/Users/poppyyang/crawlers/chromedriver', options = Options())
+
+    driver.get(web)
+
+    try:
+        address = driver.find_element(By.CLASS_NAME, 'm6QErb .rogA2c').text
+    except:
+        address = '無地址提供'
+    try:
+        time = driver.find_element(By.CLASS_NAME, 'm6QErb .OqCZI').text.replace('營業中 ⋅ ', '')
+    except:
+        time = '營業中'
+    driver.quit()
+    return address, time
+
+
+def input_wanted(search):
+    address, limittime = [], []
+
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+    chrome_options.add_argument("--headless") #無頭模式
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--no-sandbox")
+    driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
+
+    # driver = webdriver.Chrome(executable_path='/Users/poppyyang/crawlers/chromedriver', options = Options())
+    driver.get('https://www.google.com.tw/maps/search/' + search + '/data=!4m4!2m3!5m1!2e1!6e5')
+    driver.maximize_window()
+
+    driver.implicitly_wait(2)
+
+    # 1st info
+    operation = driver.find_element(By.XPATH,
+                                    '//*[@id="QA0Szd"]/div/div/div[1]/div[2]/div/div[1]/div/div/div[2]/div[1]')
+
+    name_type = operation.find_elements(By.CLASS_NAME, 'Nv2PK')
+    websites = operation.find_elements(By.TAG_NAME, 'a')
+
+    name = [i.text.split('\n')[0] for i in name_type]
+    comment = [i.text.split('\n')[1][:3] for i in name_type]
+    shoptype = [i.text.split('\n')[2].split()[0] for i in name_type]
+    website = [str(i.get_attribute('href')) for i in websites]
+    # addr = [web_get_address(i)[0] for i in website]
+
+    for i in website:
+        addr, time = web_get_address(i)
+        address.append(addr)
+        limittime.append(time)
+    driver.quit()
+
+    return name, comment, shoptype, website, address, limittime
+
+
 
 app = Flask(__name__)
 
