@@ -13,6 +13,11 @@ import time
 import os
 
 
+
+from selenium import webdriver
+from linebot.models import *
+import time
+
 def web_get_address(web):
     chrome_options = webdriver.ChromeOptions()
     chromeOption.add_argument("--lang=zh-CN.UTF8")
@@ -59,12 +64,18 @@ def input_wanted(search):
     # chrome_options.add_argument('--no-sandbox')
     # driver = webdriver.Chrome(chrome_options=chrome_options,executable_path=os.getenv('CHROMEDRIVER_PATH',None))
 
-    chrome_options = webdriver.ChromeOptions()
+    # chrome_options = webdriver.ChromeOptions()
+    # chromeOption.add_argument("--lang=zh-CN.UTF8")
+    # chromeOption.add_argument('user-agent=Mozilla/5.0 (Windows NT 10.0; WOW64; rv:53.0) Gecko/20100101 Firefox/53.0')
+    # driver = webdriver.Chrome()
+    chromeOption = webdriver.ChromeOptions()
     chromeOption.add_argument("--lang=zh-CN.UTF8")
     chromeOption.add_argument('user-agent=Mozilla/5.0 (Windows NT 10.0; WOW64; rv:53.0) Gecko/20100101 Firefox/53.0')
-    driver = webdriver.Chrome()
 
-    
+
+    driver = webdriver.Chrome()
+    driver.set_window_size(1024, 960)
+
     # driver = webdriver.Chrome(executable_path='/Users/poppyyang/crawlers/chromedriver', options = Options())
     driver.get('https://www.google.com.tw/maps/search/' + search + '/data=!4m4!2m3!5m1!2e1!6e5')
     driver.maximize_window()
