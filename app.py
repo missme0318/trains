@@ -7,6 +7,8 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import Select
+from selenium import webdriver
+
 import time
 import os
 
@@ -47,7 +49,7 @@ def input_wanted(search):
 
     # driver = webdriver.Chrome()
     # driver.set_window_size(1024, 960)
-    
+
     chrome_options = webdriver.ChromeOptions()
     chrome_options.binary_location = os.getenv('GOOGLE_CHROME_BIN',None)
     chrome_options.add_argument('--disable-gpu')
