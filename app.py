@@ -45,8 +45,14 @@ def input_wanted(search):
     # chrome_options.add_argument("--no-sandbox")
     # driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
 
-    driver = webdriver.Chrome()
-    driver.set_window_size(1024, 960)
+    # driver = webdriver.Chrome()
+    # driver.set_window_size(1024, 960)
+    
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.binary_location = os.getenv('GOOGLE_CHROME_BIN',None)
+    chrome_options.add_argument('--disable-gpu')
+    chrome_options.add_argument('--no-sandbox')
+    driver = webdriver.Chrome(chrome_options=chrome_options,executable_path=os.getenv('CHROMEDRIVER_PATH',None))
 
     # driver = webdriver.Chrome(executable_path='/Users/poppyyang/crawlers/chromedriver', options = Options())
     driver.get('https://www.google.com.tw/maps/search/' + search + '/data=!4m4!2m3!5m1!2e1!6e5')
@@ -62,18 +68,19 @@ def input_wanted(search):
     websites = operation.find_elements(By.TAG_NAME, 'a')
 
     name = [i.text.split('\n')[0] for i in name_type]
-    comment = [i.text.split('\n')[1][:3] for i in name_type]
-    shoptype = [i.text.split('\n')[2].split()[0] for i in name_type]
-    website = [str(i.get_attribute('href')) for i in websites]
+    # comment = [i.text.split('\n')[1][:3] for i in name_type]
+    # shoptype = [i.text.split('\n')[2].split()[0] for i in name_type]
+    # website = [str(i.get_attribute('href')) for i in websites]
     # addr = [web_get_address(i)[0] for i in website]
 
-    for i in website:
-        addr, time = web_get_address(i)
-        address.append(addr)
-        limittime.append(time)
-    driver.quit()
+    # for i in website:
+    #     addr, time = web_get_address(i)
+    #     address.append(addr)
+    #     limittime.append(time)
+    # driver.quit()
 
-    return name, comment, shoptype, website, address, limittime
+    return name
+    # return name, comment, shoptype, website, address, limittime
 
 
 
@@ -120,7 +127,7 @@ def handle_message(event):
         r = 'Hi!'
 
     elif '高雄美食' == msg:
-        name, comment, shoptype, website, address, limittime = input_wanted('高雄美食')
+        name = input_wanted('高雄美食')
         r = name
 
     else:
