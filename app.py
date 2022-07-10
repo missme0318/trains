@@ -38,12 +38,15 @@ def web_get_address(web):
 def input_wanted(search):
     address, limittime = [], []
 
-    chrome_options = webdriver.ChromeOptions()
-    chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
-    chrome_options.add_argument("--headless") #無頭模式
-    chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("--no-sandbox")
-    driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
+    # chrome_options = webdriver.ChromeOptions()
+    # chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+    # chrome_options.add_argument("--headless") #無頭模式
+    # chrome_options.add_argument("--disable-dev-shm-usage")
+    # chrome_options.add_argument("--no-sandbox")
+    # driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
+
+    driver = webdriver.Chrome()
+    driver.set_window_size(1024, 960)
 
     # driver = webdriver.Chrome(executable_path='/Users/poppyyang/crawlers/chromedriver', options = Options())
     driver.get('https://www.google.com.tw/maps/search/' + search + '/data=!4m4!2m3!5m1!2e1!6e5')
