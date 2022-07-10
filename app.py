@@ -153,7 +153,7 @@ def handle_message(event):
         r = name
 
     else:
-        r = '抱歉！您說什麼？'
+        r = '抱歉！說什麼？'
 
     line_bot_api.reply_message(
         event.reply_token,
